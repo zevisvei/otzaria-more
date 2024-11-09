@@ -1,13 +1,6 @@
 #!/bin/bash
 
-# משתנים עבור הריליס
-TAG_NAME="v$(date +%Y%m%d%H%M%S)"
-RELEASE_NAME="Release $TAG_NAME"
-
-# צור את הריליס בגיטהאב
-gh release create "$TAG_NAME" -t "$RELEASE_NAME" -n "Release containing each folder as a separate ZIP"
-
-# עבור על כל תיקייה בתיקיית הפרויקט
+# צור את הריליסים עבור כל תיקייה
 for dir in */ ; do
   # בדוק אם מדובר בתיקייה
   if [ -d "$dir" ]; then
@@ -21,9 +14,15 @@ for dir in */ ; do
     
     # בדוק אם קובץ ה-ZIP נוצר בהצלחה
     if [ -f "$zip_file" ]; then
-      echo "Uploading $zip_file to GitHub Release"
+      # צור ריליס חדש עם שם תג ייחודי לכל תיקייה
+      TAG_NAME="v$(date +%Y%m%d%H%M%S)_$folder_name"
+      RELEASE_NAME="Release $TAG_NAME"
       
-      # העלה את קובץ ה-ZIP לריליס בגיטהאב עם פרמטר --clobber
+      echo "Creating GitHub Release: $TAG_NAME"
+      gh release create "$TAG_NAME" -t "$RELEASE_NAME" -n "Release for folder: $folder_name"
+      
+      # העלה את קובץ ה-ZIP לריליס בגיטהאב
+      echo "Uploading $zip_file to GitHub Release"
       gh release upload "$TAG_NAME" "$zip_file" --clobber
       
       # מחק את קובץ ה-ZIP אחרי ההעלאה
