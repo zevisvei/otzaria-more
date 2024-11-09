@@ -14,8 +14,8 @@ for dir in */ ; do
     
     # בדוק אם קובץ ה-ZIP נוצר בהצלחה
     if [ -f "$zip_file" ]; then
-      # צור ריליס חדש עם שם תג ייחודי לכל תיקייה
-      TAG_NAME="v$(date +%Y%m%d%H%M%S)_$folder_name"
+      # צור ריליס חדש עם שם תג ייחודי לכל תיקייה (הסרת רווחים והמרה לאותיות קטנות)
+      TAG_NAME="v$(date +%Y%m%d%H%M%S)_$(echo $folder_name | tr ' ' '-')"
       RELEASE_NAME="Release $TAG_NAME"
       
       echo "Creating GitHub Release: $TAG_NAME"
